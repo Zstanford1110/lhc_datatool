@@ -9,7 +9,7 @@ def load_csv(file_path):
         print('CSV file loaded successfully.')
         print(data.head())
         event_data_store = process_data(data)
-        # print(event_data_store.get_event_data('Hiring Booth'))
+        print(event_data_store.get_event_data('Amount Of Time Per Run'))
         print("User Count: ", event_data_store.get_user_count())
         print("Session Count: ", event_data_store.get_session_count())
     except Exception as e:

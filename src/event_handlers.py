@@ -5,8 +5,15 @@ import json
 
 def process_time_per_run_event(string_props):
     # Ex: '{"Runtime":"18"}'
-    return json.loads(string_props)['Runtime']
-
+   return json.loads(string_props)['Runtime']
+    #         filtered_run_times = [];
+    # previous_run_time = None
+    # for run_time in run_times:
+    #     if run_time != 0 and run_time != previous_run_time:
+    #         filtered_run_times.append(run_time)
+    #     previous_run_time = run_time
+    # return filtered_run_times
+    
 def process_assistant_chosen_event(string_props):
     # Ex: '{"Assistant Chosen":"Banker Assistant"}'
     return json.loads(string_props)['Assistant Chosen']
@@ -25,7 +32,6 @@ def process_number_of_waves_revealed_event(string_props):
 
 def process_player_death_event(string_props):
     # Ex: '{"Enemy That Killed Player":"Straw Berry","Wave That Player Died On":"7","Wave Type That Player Died On":"Normal"}'
-    # May not have the same shape every time
     return json.loads(string_props)
 
 def process_wave_breakdown_event(string_props):
