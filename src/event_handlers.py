@@ -6,13 +6,6 @@ import json
 def process_time_per_run_event(string_props):
     # Ex: '{"Runtime":"18"}'
    return json.loads(string_props)['Runtime']
-    #         filtered_run_times = [];
-    # previous_run_time = None
-    # for run_time in run_times:
-    #     if run_time != 0 and run_time != previous_run_time:
-    #         filtered_run_times.append(run_time)
-    #     previous_run_time = run_time
-    # return filtered_run_times
     
 def process_assistant_chosen_event(string_props):
     # Ex: '{"Assistant Chosen":"Banker Assistant"}'

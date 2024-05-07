@@ -1,19 +1,24 @@
+import json
 import os
+import logging
 import pandas as pd
-from data_processor import process_data
-from event_data_store import EventDataStore
+from data_loader import load_data
+from data_transformer import transform_data
 
 def load_csv(file_path):
     try:
         data = pd.read_csv(file_path)
         print('CSV file loaded successfully.')
         print(data.head())
-        event_data_store = process_data(data)
-        print(event_data_store.get_event_data('Amount Of Time Per Run'))
-        print("User Count: ", event_data_store.get_user_count())
-        print("Session Count: ", event_data_store.get_session_count())
+
+        event_data_store = load_data(data)
+        final_data_store = transform_data(event_data_store)
+
+        # print(json.dumps(event_data_store.get_event_data("Main Menu Selections")))
+        print(json.dumps(final_data_store.get_all_data()))
+
     except Exception as e:
-        print(f"Failed to load CSV file: {e}")
+        logging.exception("An error occurred!")
 
 def main():
     input_directory = "../input"

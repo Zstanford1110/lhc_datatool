@@ -1,20 +1,20 @@
 import pandas as pd
+from classes.event_data_store import EventDataStore
 from event_handlers import *
-from event_data_store import EventDataStore
 
 event_function_map = {
-    'Amount Of Time Per Run': process_time_per_run_event,
-    'Assistant Chosen': process_assistant_chosen_event,
+    'Amount Of Time Per Run': process_time_per_run_event, # Done
+    'Assistant Chosen': process_assistant_chosen_event, # Done
     'Hiring Booth': process_hiring_booth_event,
-    'Main Menu Selections': process_main_menu_selections_event,
-    'Number Of Waves Revealed': process_number_of_waves_revealed_event,
+    'Main Menu Selections': process_main_menu_selections_event, # Done
+    'Number Of Waves Revealed': process_number_of_waves_revealed_event, # Done
     'Player Death': process_player_death_event,
-    'Wave Breakdown': process_wave_breakdown_event,
+    'Wave Breakdown': process_wave_breakdown_event, # Probably not usable, but will build architecture
     'Weapon Chosen': process_weapon_chosen_event,
     'Weapons Shop': process_weapons_shop_event
 }
 
-def process_data(data):
+def load_data(data):
     event_data_store = EventDataStore()
     unique_user_ids = set()
     unique_session_ids = set()
