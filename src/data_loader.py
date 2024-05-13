@@ -5,7 +5,7 @@ from event_handlers import *
 event_function_map = {
     'Amount Of Time Per Run': process_time_per_run_event, # Done
     'Assistant Chosen': process_assistant_chosen_event, # Done
-    'Hiring Booth': process_hiring_booth_event,
+    'Hiring Booth': process_hiring_booth_event, # Done
     'Main Menu Selections': process_main_menu_selections_event, # Done
     'Number Of Waves Revealed': process_number_of_waves_revealed_event, # Done
     'Player Death': process_player_death_event,

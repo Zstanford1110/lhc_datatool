@@ -1,0 +1,36 @@
+{
+  "Users": ["string"],
+  "Sessions": ["string"],
+  "Session Count": "integer",
+  "User Count": "integer",
+  "Run Times": ["integer"],
+  "Average Run Time": "float",
+  "Total Assistant Hires": "integer",
+  "Assistant Selection Distribution": {
+    "assistant_name": "integer"
+  },
+  "Total Runs Started": "integer",
+  "Menu Selection Distribution": [
+    {
+      "Class Selections": {
+        "class_name": "integer"
+      }
+    },
+    {
+      "Difficulty Selections": {
+        "difficulty_level": "integer"
+      }
+    }
+  ],
+  "Waves Revealed": ["integer"],
+  "Average Waves Revealed": "float",
+  "Total Waves Revealed": "integer",
+  "Hiring Booth Raw Data": {
+    "Number of Assistants Fired": ["integer"],
+    "Number of Times Assistants Rerolled": ["integer"]
+  },
+  "Total Number of Assistants Fired": "integer",
+  "Total Number of Assistant Rerolls": "integer",
+  "Average Assistants Fired": "float",
+  "Average Assistant Rerolls": "float"
+}
