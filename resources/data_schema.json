@@ -1,36 +1,50 @@
 {
-  "Users": ["string"],
-  "Sessions": ["string"],
-  "Session Count": "integer",
-  "User Count": "integer",
-  "Run Times": ["integer"],
-  "Average Run Time": "float",
-  "Total Assistant Hires": "integer",
-  "Assistant Selection Distribution": {
-    "assistant_name": "integer"
+  "General Analytics Data": {
+    "User IDs": ["string"],
+    "Session IDs": ["string"],
+    "User Count": "integer",
+    "Session Count": "integer"
   },
-  "Total Runs Started": "integer",
-  "Menu Selection Distribution": [
-    {
-      "Class Selections": {
-        "class_name": "integer"
-      }
+  "Run Data": {
+    "Run Times": ["integer"],
+    "Average Run Time": "float",
+    "Total Runs": "integer"
+  },
+  "Assistant Data": {
+    "Raw Assistant Data": ["string"],
+    "Assistant Selection Distribution": {
+      "assistant_name": "integer"
     },
-    {
-      "Difficulty Selections": {
-        "difficulty_level": "integer"
-      }
-    }
-  ],
-  "Waves Revealed": ["integer"],
-  "Average Waves Revealed": "float",
-  "Total Waves Revealed": "integer",
-  "Hiring Booth Raw Data": {
-    "Number of Assistants Fired": ["integer"],
-    "Number of Times Assistants Rerolled": ["integer"]
+    "Total Assistants Hired": "integer"
   },
-  "Total Number of Assistants Fired": "integer",
-  "Total Number of Assistant Rerolls": "integer",
-  "Average Assistants Fired": "float",
-  "Average Assistant Rerolls": "float"
+  "Menu Selection Distribution": {
+    "Class Selections": {
+      "class_name": "integer"
+    },
+    "Difficulty Selections": {
+      "difficulty_level": "integer"
+    }
+  },
+  "Wave Reveal Data": {
+    "Waves Revealed Raw Data": ["integer"],
+    "Average Waves Revealed": "float",
+    "Total Waves Revealed": "integer"
+  },
+  "Hiring Booth Data": {
+    "Assistants Fired Raw Data": ["integer"],
+    "Assistants Rerolled Raw Data": ["integer"],
+    "Total Number of Assistants Fired": "integer",
+    "Total Number of Assistant Rerolls": "integer",
+    "Average Assistants Fired": "float",
+    "Average Assistant Rerolls": "float"
+  },
+  "Player Death Data": {
+    "Enemy That Killed Player Distribution": {
+      "enemy_type": "integer"
+    },
+    "Waves That Players Died On": ["integer"],
+    "Wave Types That Players Died On Distribution": {
+      "wave_type": "integer"
+    }
+  }
 }
