@@ -9,7 +9,7 @@ event_function_map = {
     'Main Menu Selections': process_main_menu_selections_event, # Done
     'Number Of Waves Revealed': process_number_of_waves_revealed_event, # Done
     'Player Death': process_player_death_event,
-    'Wave Breakdown': process_wave_breakdown_event, # Probably not usable, but will build architecture
+    'Wave Breakdown': process_wave_breakdown_event, 
     'Weapon Chosen': process_weapon_chosen_event,
     'Weapons Shop': process_weapons_shop_event
 }

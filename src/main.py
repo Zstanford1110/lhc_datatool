@@ -15,7 +15,7 @@ def load_csv(file_path):
         final_data_store = transform_data(event_data_store)
 
         # print(json.dumps(event_data_store.get_event_data("Player Death")))
-        print(json.dumps(final_data_store.get_data("Player Death Raw Data")))
+        print(json.dumps(final_data_store.get_all_data()))
 
     except Exception as e:
         logging.exception("An error occurred!")
