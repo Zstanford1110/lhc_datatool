@@ -24,8 +24,14 @@ def transform_data(event_data_store):
     final_data_store.add_data("Hiring Booth Data", process_hiring_booth_data(event_data_store.get_event_data("Hiring Booth")))
 
     # Player death statistics
-    # {"Enemy That Killed Player": "Straw Berry", "Wave That Player Died On": "7", "Wave Type That Player Died On": "Normal"}
     final_data_store.add_data("Player Death Data", process_player_death_data(event_data_store.get_event_data("Player Death")))
+
+    # Wave Breakdown statistics
+    final_data_store.add_data("Wave Breakdown Data", process_wave_breakdown_data(event_data_store.get_event_data("Wave Breakdown")))
+
+    # Weapon Data
+    final_data_store.add_data("Weapon Data", process_weapon_data(event_data_store))
+
 
     return final_data_store
 
@@ -43,8 +49,22 @@ def process_run_data(event_data_store):
     filtered_run_times = filter_run_times(event_data_store.get_event_data("Amount Of Time Per Run"))
     average_run_time = mean(filtered_run_times)
     total_runs_started = len(event_data_store.get_event_data("Main Menu Selections"))
+
+    # Process Boss Killed events
+    beat_the_run_data = event_data_store.get_event_data("Beat The Run")
+    boss_killed_distribution = {}
+    for boss_killed in beat_the_run_data:
+        # boss_killed will be blank if the player did not beat a boss in the run
+        if not boss_killed:
+            boss_killed = "Did Not Beat Boss"
+
+        if boss_killed in boss_killed_distribution:
+            boss_killed_distribution[boss_killed] += 1
+        else:
+            boss_killed_distribution[boss_killed] = 1
+
     
-    return { "Run Times": filtered_run_times, "Average Run Time": average_run_time, "Total Runs": total_runs_started}
+    return { "Run Times": filtered_run_times, "Average Run Time": average_run_time, "Total Runs": total_runs_started, "Bosses Killed Distribution": boss_killed_distribution }
 
 def process_assistant_data(assistants_chosen):
     assistant_counts = {}
@@ -151,6 +171,69 @@ def process_player_death_data(player_death_data):
         highest_wave_reached = max(wave_that_player_died_on_list)
             
     return { "Enemy That Killed Player Distribution": enemy_that_killed_player_distribution, "Waves That Players Died On": wave_that_player_died_on_list, "Wave Types That Players Died On Distribution": wave_type_player_died_on_distribution,  "Average Wave Reached Before Death": average_wave_reached, "Highest Wave Reached": highest_wave_reached }
+
+# {"Enemy Groups":"Skirt Steak - Regular,Pork Chop,Whipped Cream,Hot Dog,Whipped Cream,Enemy Cheeses","Money Earned":"91","Wave Number":"6","Wave Type":"Normal"}
+def process_wave_breakdown_data(waves):
+    money_earned = []
+    wave_numbers = []
+    wave_number_distribution = {}
+    wave_type_distribution = {}
+    enemy_group_distribution = {}
+
+    
+    for wave_breakdown in waves:
+        wave_number = wave_breakdown.get("Wave Number")
+        wave_type = wave_breakdown.get("Wave Type")
+        enemy_groups = wave_breakdown.get("Enemy Groups")
+        money_earned.append(wave_breakdown.get("Money Earned"))
+        wave_numbers.append(wave_number)
+
+       
+        if wave_number in wave_number_distribution:
+            wave_number_distribution[wave_number] += 1
+        else:
+            wave_number_distribution[wave_number] = 1
+
+        if wave_type in wave_type_distribution:
+            wave_type_distribution[wave_type] += 1
+        else:
+            wave_type_distribution[wave_type] = 1
+
+        # String parsing require for enemy groups, split on commas and iterate through the new strings adding them to the distribution
+        split_enemy_groups = enemy_groups.split(',')
+        for enemy_group in split_enemy_groups:
+            if enemy_group in enemy_group_distribution:
+                enemy_group_distribution[enemy_group] += 1
+            else:
+                enemy_group_distribution[enemy_group] = 1
+
+    return {"Money Earned Raw Data": money_earned, "Wave Number Raw Data": wave_numbers, "Wave Number Distribution": wave_number_distribution, "Wave Type Distribution": wave_type_distribution, "Enemy Group Distribution": enemy_group_distribution}
+
+def process_weapon_data(event_data_store):
+    weapon_data = event_data_store.get_event_data("Weapon Chosen")
+    weapon_chosen_distribution = {}
+
+    for weapon in weapon_data:
+        if weapon in weapon_chosen_distribution:
+            weapon_chosen_distribution[weapon] += 1
+        else:
+            weapon_chosen_distribution[weapon] = 1
+
+    weapon_shop_choices = event_data_store.get_event_data("Weapons Shop")
+    weapon_rerolls = []
+    weapon_combined_or_sold = []
+
+    for shop_choice in weapon_shop_choices:
+        weapon_rerolls.append(int(shop_choice.get("Number Of Times Weapons Rerolled")))
+        weapon_combined_or_sold.append(int(shop_choice.get("Number Of Weapons Combined And Sold")))
+    
+    weapons_rerolled_average = mean(weapon_rerolls)
+    weapons_combined_or_sold_average = mean(weapon_combined_or_sold)
+
+    return { "Weapon Chosen Distribution": weapon_chosen_distribution, "Weapon Rerolls Raw Data": weapon_rerolls, "Weapon Combines or Sells Raw Data": weapon_combined_or_sold, "Average Weapon Rerolls": weapons_rerolled_average, "Average Weapon Combines or Sells": weapons_combined_or_sold_average }
+
+
+
 
 ## HELPER FUNCTIONS
 # Hopefully temporary helper function to remove duplicate and 0 value run times

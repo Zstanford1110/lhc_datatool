@@ -8,10 +8,11 @@ event_function_map = {
     'Hiring Booth': process_hiring_booth_event, # Done
     'Main Menu Selections': process_main_menu_selections_event, # Done
     'Number Of Waves Revealed': process_number_of_waves_revealed_event, # Done
-    'Player Death': process_player_death_event,
-    'Wave Breakdown': process_wave_breakdown_event, 
-    'Weapon Chosen': process_weapon_chosen_event,
-    'Weapons Shop': process_weapons_shop_event
+    'Player Death': process_player_death_event, # Done
+    'Wave Breakdown': process_wave_breakdown_event, # Done
+    'Weapon Chosen': process_weapon_chosen_event, # Done
+    'Weapons Shop': process_weapons_shop_event, # Done
+    'Beat The Run': process_beat_run_event # Done
 }
 
 def load_data(data):

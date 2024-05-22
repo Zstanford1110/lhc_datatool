@@ -39,3 +39,6 @@ def process_weapon_chosen_event(string_props):
 def process_weapons_shop_event(string_props):
     # Ex: '{"Number Of Times Weapons Rerolled":"0","Number Of Weapons Combined And Sold":"0"}'
     return json.loads(string_props)
+
+def process_beat_run_event(string_props):
+    return json.loads(string_props)['Boss Killed']

@@ -11,11 +11,16 @@ def load_csv(file_path):
         print('CSV file loaded successfully.')
         print(data.head())
 
+        print("START: Loading Data from .csv")
         event_data_store = load_data(data)
-        final_data_store = transform_data(event_data_store)
+        print("END: Loading Data from .csv")
 
-        # print(json.dumps(event_data_store.get_event_data("Player Death")))
-        print(json.dumps(final_data_store.get_all_data()))
+        print("START: Transforming Data")
+        final_data_store = transform_data(event_data_store)
+        print("END: Transforming Data")
+
+        # print(json.dumps(event_data_store.get_event_data("Beat The Run")))
+        print(json.dumps(final_data_store.get_data("Run Data")))
 
     except Exception as e:
         logging.exception("An error occurred!")
