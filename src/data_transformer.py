@@ -1,4 +1,3 @@
-import json
 from numpy import mean
 from classes.final_data_store import FinalDataStore
 
@@ -15,7 +14,7 @@ def transform_data(event_data_store):
     final_data_store.add_data("Assistant Data", process_assistant_data(event_data_store.get_event_data("Assistant Chosen")))
 
     # Main Menu Selections statistics
-    final_data_store.add_data("Menu Selection Distribution", process_main_menu_selections_data(event_data_store.get_event_data("Main Menu Selections")))
+    final_data_store.add_data("Menu Selection Data", process_main_menu_selections_data(event_data_store.get_event_data("Main Menu Selections")))
 
     # Wave Reveal Data
     final_data_store.add_data("Wave Reveal Data", process_wave_reveal_data(event_data_store.get_event_data('Number Of Waves Revealed')))

@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 from data_loader import load_data
 from data_transformer import transform_data
+from report_generator import generate_report
 
 def load_csv(file_path):
     try:
@@ -19,8 +20,9 @@ def load_csv(file_path):
         final_data_store = transform_data(event_data_store)
         print("END: Transforming Data")
 
-        # print(json.dumps(event_data_store.get_event_data("Beat The Run")))
-        print(json.dumps(final_data_store.get_data("Run Data")))
+        print("START: Report Generation")
+        generate_report(final_data_store)
+        print("END: Report Generation")
 
     except Exception as e:
         logging.exception("An error occurred!")

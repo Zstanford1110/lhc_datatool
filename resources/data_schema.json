@@ -17,7 +17,7 @@
     },
     "Total Assistants Hired": "integer"
   },
-  "Menu Selection Distribution": {
+  "Menu Selection Data": {
     "Class Selections": {
       "class_name": "integer"
     },
