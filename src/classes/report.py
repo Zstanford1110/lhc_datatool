@@ -5,8 +5,8 @@ class ReportSection:
         self.figures = []
         self.statistics = {}
 
-    def add_figure(self, figure):
-        self.figures.append(figure)
+    def add_figure(self, figure, width, height):
+        self.figures.append((figure, width, height))
 
     def add_statistic(self, key, value):
         self.statistics[key] = value
