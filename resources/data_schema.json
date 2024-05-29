@@ -8,7 +8,10 @@
   "Run Data": {
     "Run Times": ["integer"],
     "Average Run Time": "float",
-    "Total Runs": "integer"
+    "Total Runs": "integer",
+    "Bosses Killed Distribution": {
+      "boss_name": "integer"
+    }
   },
   "Assistant Data": {
     "Raw Assistant Data": ["string"],
@@ -45,6 +48,30 @@
     "Waves That Players Died On": ["integer"],
     "Wave Types That Players Died On Distribution": {
       "wave_type": "integer"
+    },
+    "Average Wave Reached Before Death": "float",
+    "Highest Wave Reached": "integer"
+  },
+  "Wave Breakdown Data": {
+    "Money Earned Raw Data": ["integer"],
+    "Wave Number Raw Data": ["integer"],
+    "Wave Number Distribution": {
+      "wave_number": "integer"
+    },
+    "Wave Type Distribution": {
+      "wave_type": "integer"
+    },
+    "Enemy Group Distribution": {
+      "enemy_group": "integer"
     }
+  },
+  "Weapon Data": {
+    "Weapon Chosen Distribution": {
+      "weapon_name": "integer"
+    },
+    "Weapon Rerolls Raw Data": ["integer"],
+    "Weapon Combines or Sells Raw Data": ["integer"],
+    "Average Weapon Rerolls": "float",
+    "Average Weapon Combines or Sells": "float"
   }
 }

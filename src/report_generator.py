@@ -24,6 +24,7 @@ def generate_report(data):
         "General Analytics Data": general_analytics,
         "Run Data": run_analytics,
         "Assistant Data": assistant_analytics,
+        "Menu Selection Data": menu_analytics,
     }
 
 
@@ -81,6 +82,24 @@ def assistant_analytics(report, assistant_data):
 
     report.add_section(section)
 
+def menu_analytics(report, menu_data):
+    section = ReportSection("Main Menu Data", "Data relating to menu selections when starting a run")
+
+    class_names = list(menu_data['Class Selections'].keys())
+    class_selections = list(menu_data['Class Selections'].values())
+
+    class_distribution = create_barchart("Class Selection Distribution", "Class", "Frequency", class_names, class_selections, 8, 6)
+
+    difficulty_names = list(menu_data['Difficulty Selections'].keys())
+    difficulty_selections = list(menu_data['Difficulty Selections'].values())
+
+    difficulty_distribution = create_barchart("Difficulty Selection Distribution", "Difficulty", "Frequency", difficulty_names, difficulty_selections, 8, 6)
+    
+    section.add_figure(class_distribution, 400, 300)
+    section.add_figure(difficulty_distribution, 400, 300)
+
+    report.add_section(section)
+
 def export_pdf(report):
     c = canvas.Canvas("report.pdf", pagesize=letter)
     c.setTitle("Let Him Cook Data")
@@ -106,11 +125,12 @@ def export_pdf(report):
 
         for figure in section.figures:
             figure_obj, fig_width, fig_height = figure
+
             draw_figure(c, figure_obj, 72, y_position - fig_height, fig_width, fig_height)  # Adjust width and height as needed
             y_position -= fig_height # Adjust space after figure
 
         # Check if there's enough space to continue on this page
-        if y_position < 50:
+        if y_position < 200:
             c.showPage()
             y_position = 750  # Reset y_position for new page
         else:

@@ -20,6 +20,8 @@ def load_csv(file_path):
         final_data_store = transform_data(event_data_store)
         print("END: Transforming Data")
 
+        print(json.dumps(final_data_store.get_data('Menu Selection Data')))
+
         print("START: Report Generation")
         generate_report(final_data_store)
         print("END: Report Generation")

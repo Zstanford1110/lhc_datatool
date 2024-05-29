@@ -91,6 +91,9 @@ def process_main_menu_selections_data(main_menu_selections):
     for selection_data in main_menu_selections:
         # Count "Class Selected"
         class_selected = selection_data.get("Class Selected")
+        if not class_selected:
+            class_selected = "Class Not Recognized"
+
         if class_selected in class_counts:
             class_counts[class_selected] += 1
         else:
@@ -98,6 +101,9 @@ def process_main_menu_selections_data(main_menu_selections):
 
         # Count "Difficulty Selected"
         difficulty_selected = selection_data.get("Difficulty Selected")
+        if not difficulty_selected:
+            difficulty_selected = "Difficulty Not Recognized"
+
         if difficulty_selected in difficulty_counts:
             difficulty_counts[difficulty_selected] += 1
         else:
