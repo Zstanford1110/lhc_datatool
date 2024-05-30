@@ -46,7 +46,7 @@ def process_general_analytics_data(event_data_store):
 def process_run_data(event_data_store):
     # Filter 0 values and obvious duplicates from run times
     filtered_run_times = filter_run_times(event_data_store.get_event_data("Amount Of Time Per Run"))
-    average_run_time = mean(filtered_run_times)
+    average_run_time = round(mean(filtered_run_times), 4)
     total_runs_started = len(event_data_store.get_event_data("Main Menu Selections"))
 
     # Process Boss Killed events
@@ -118,7 +118,7 @@ def process_main_menu_selections_data(main_menu_selections):
 
 def process_wave_reveal_data(waves_revealed):
     parsed_waves_revealed = parse_int_list(waves_revealed)
-    average_waves_revealed = mean(parsed_waves_revealed)
+    average_waves_revealed = round(mean(parsed_waves_revealed), 4)
     total_waves_revealed = sum(parsed_waves_revealed)
     
     return { "Waves Revealed Raw Data": parsed_waves_revealed, "Average Waves Revealed": average_waves_revealed, "Total Waves Revealed": total_waves_revealed}
@@ -135,8 +135,8 @@ def process_hiring_booth_data(hiring_booth):
    
     total_fired = sum(fired_data)
     total_rerolls = sum(rerolled_data)
-    average_fired = mean(fired_data)
-    average_reroll = mean(rerolled_data)
+    average_fired = round(mean(fired_data), 4)
+    average_reroll = round(mean(rerolled_data), 4)
     
     return { "Assistants Fired Raw Data": fired_data, "Assistants Rerolled Raw Data": rerolled_data, "Total Number of Assistants Fired": total_fired, "Total Number of Assistant Rerolls": total_rerolls, "Average Assistants Fired": average_fired, "Average Assistant Rerolls": average_reroll }
 
@@ -172,7 +172,7 @@ def process_player_death_data(player_death_data):
         else:
             wave_type_player_died_on_distribution[wave_type] = 1
             
-        average_wave_reached = mean(wave_that_player_died_on_list)
+        average_wave_reached = round(mean(wave_that_player_died_on_list))
         highest_wave_reached = max(wave_that_player_died_on_list)
             
     return { "Enemy That Killed Player Distribution": enemy_that_killed_player_distribution, "Waves That Players Died On": wave_that_player_died_on_list, "Wave Types That Players Died On Distribution": wave_type_player_died_on_distribution,  "Average Wave Reached Before Death": average_wave_reached, "Highest Wave Reached": highest_wave_reached }
@@ -212,7 +212,10 @@ def process_wave_breakdown_data(waves):
             else:
                 enemy_group_distribution[enemy_group] = 1
 
-    return {"Money Earned Raw Data": money_earned, "Wave Number Raw Data": wave_numbers, "Wave Number Distribution": wave_number_distribution, "Wave Type Distribution": wave_type_distribution, "Enemy Group Distribution": enemy_group_distribution}
+    # Sort the enemy_group_distribution by value in descending order
+    sorted_enemy_group_distribution = dict(sorted(enemy_group_distribution.items(), key=lambda item: item[1]))
+    
+    return {"Money Earned Raw Data": money_earned, "Wave Number Raw Data": wave_numbers, "Wave Number Distribution": wave_number_distribution, "Wave Type Distribution": wave_type_distribution, "Enemy Group Distribution": sorted_enemy_group_distribution}
 
 def process_weapon_data(event_data_store):
     weapon_data = event_data_store.get_event_data("Weapon Chosen")
@@ -224,6 +227,9 @@ def process_weapon_data(event_data_store):
         else:
             weapon_chosen_distribution[weapon] = 1
 
+    # Sort the weapon_chosen_distribution by value in descending order
+    sorted_weapon_chosen_distribution = dict(sorted(weapon_chosen_distribution.items(), key=lambda item: item[1]))
+
     weapon_shop_choices = event_data_store.get_event_data("Weapons Shop")
     weapon_rerolls = []
     weapon_combined_or_sold = []
@@ -232,10 +238,10 @@ def process_weapon_data(event_data_store):
         weapon_rerolls.append(int(shop_choice.get("Number Of Times Weapons Rerolled")))
         weapon_combined_or_sold.append(int(shop_choice.get("Number Of Weapons Combined And Sold")))
     
-    weapons_rerolled_average = mean(weapon_rerolls)
-    weapons_combined_or_sold_average = mean(weapon_combined_or_sold)
-
-    return { "Weapon Chosen Distribution": weapon_chosen_distribution, "Weapon Rerolls Raw Data": weapon_rerolls, "Weapon Combines or Sells Raw Data": weapon_combined_or_sold, "Average Weapon Rerolls": weapons_rerolled_average, "Average Weapon Combines or Sells": weapons_combined_or_sold_average }
+    weapons_rerolled_average = round(mean(weapon_rerolls), 4)
+    weapons_combined_or_sold_average = round(mean(weapon_combined_or_sold), 4)
+    
+    return { "Weapon Chosen Distribution": sorted_weapon_chosen_distribution, "Weapon Rerolls Raw Data": weapon_rerolls, "Weapon Combines or Sells Raw Data": weapon_combined_or_sold, "Average Weapon Rerolls": weapons_rerolled_average, "Average Weapon Combines or Sells": weapons_combined_or_sold_average }
 
 
 

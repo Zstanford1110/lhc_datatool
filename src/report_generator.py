@@ -25,6 +25,11 @@ def generate_report(data):
         "Run Data": run_analytics,
         "Assistant Data": assistant_analytics,
         "Menu Selection Data": menu_analytics,
+        "Wave Reveal Data": wave_reveal_analytics,
+        "Hiring Booth Data": hiring_booth_analytics,
+        "Player Death Data": death_analytics,
+        "Wave Breakdown Data": wave_breakdown_analytics,
+        "Weapon Data": weapon_analytics,
     }
 
 
@@ -61,6 +66,12 @@ def run_analytics(report, run_data):
 
     run_boxplot = create_boxplot("Run Duration Overview", "Run Duration (seconds)", run_data['Run Times'], 10, 2)
     section.add_figure(run_boxplot, 500, 100)
+    
+    boss_names = list(run_data['Bosses Killed Distribution'].keys())
+    kill_frequency = list(run_data['Bosses Killed Distribution'].values())
+    
+    bosses_killed_distribution = create_barchart("Bosses Killed Distribution", "Boss", "Times Killed", boss_names, kill_frequency, 8, 6)
+    section.add_figure(bosses_killed_distribution, 400, 300)
 
     section.add_statistic("Total Runs Started", run_data['Total Runs'])
     section.add_statistic("Average Run Duration", run_data['Average Run Time'])
@@ -99,7 +110,103 @@ def menu_analytics(report, menu_data):
     section.add_figure(difficulty_distribution, 400, 300)
 
     report.add_section(section)
+    
+def wave_reveal_analytics(report, reveal_data):
+    section = ReportSection("Wave Reveal Data", "Data relating to the player choosing to reveal upcoming wave information")
+    
+    reveal_boxplot = create_boxplot("Wave Reveal Overview", "Number of Waves Revealed (Per Run)", reveal_data['Waves Revealed Raw Data'], 10, 2)
+    section.add_figure(reveal_boxplot, 500, 100)
+    
+    section.add_statistic("Average Waves Revealed", reveal_data['Average Waves Revealed'])
+    section.add_statistic("Total Waves Revealed", reveal_data['Total Waves Revealed'])
 
+    report.add_section(section)
+    
+def hiring_booth_analytics(report, hiring_data):
+    section = ReportSection("Hiring Booth Data", "Data relating to decisions made by the player in the hiring booth menu")
+    
+    section.add_statistic("Total Assistants Fired", hiring_data['Total Number of Assistants Fired'])
+    section.add_statistic("Average Assistants Fired (All Runs)", hiring_data['Average Assistants Fired'])
+    section.add_statistic("Total Assistant Rerolls", hiring_data['Total Number of Assistant Rerolls'])
+    section.add_statistic("Average Assistant Rerolls (All Runs)", hiring_data['Average Assistant Rerolls'])
+    
+    report.add_section(section)
+    
+def death_analytics(report, death_data):
+    section = ReportSection("Player Death Data", "Data relating to a player death and end of a run")
+    
+    enemy_type, death_frequency = extract_keys_values(death_data['Enemy That Killed Player Distribution']) 
+    enemy_death_distribution = create_barchart("Enemy that Killed Player Distribution", "Enemy Type", "Player Deaths", enemy_type, death_frequency, 8, 6)
+    section.add_figure(enemy_death_distribution, 400, 300)
+    
+    wave_type, wave_type_death_frequency = extract_keys_values(death_data['Wave Types That Players Died On Distribution'])
+    wave_type_death_distribution = create_barchart("Wave Types Players Died On Distribution", "Wave Type", "Player Deaths", wave_type, wave_type_death_frequency, 8, 6)
+    section.add_figure(wave_type_death_distribution, 400, 300)
+    
+    player_death_distribution = create_boxplot("Player Death Distribution (By Wave)", "Wave Number", death_data['Waves That Players Died On'], 10, 2)
+    section.add_figure(player_death_distribution, 500, 100)
+    
+    section.add_statistic("Average Wave Reached Before Death", death_data['Average Wave Reached Before Death'])
+    section.add_statistic("Highest Wave Reached", death_data['Highest Wave Reached'])
+    
+    report.add_section(section)
+
+def wave_breakdown_analytics(report, breakdown_data):
+    section = ReportSection("Wave Breakdown Data", "Data relating to different wave characteristics")
+
+    wave_number_distribution = create_barchart(
+        "Wave Number Distribution", 
+        "Wave Number", 
+        "Occurrences", 
+        list(breakdown_data['Wave Number Distribution'].keys()), 
+        list(breakdown_data['Wave Number Distribution'].values()), 
+        8, 6,
+        annotate=False  # Disable annotations
+    )
+    section.add_figure(wave_number_distribution, 400, 300)
+
+    wave_type_distribution = create_barchart(
+        "Wave Type Distribution", 
+        "Wave Type", 
+        "Occurrences", 
+        list(breakdown_data['Wave Type Distribution'].keys()), 
+        list(breakdown_data['Wave Type Distribution'].values()), 
+        8, 6
+    )
+    section.add_figure(wave_type_distribution, 400, 300)
+
+    enemy_group_distribution = create_horizontal_barchart(
+        "Enemy Group Distribution", 
+        "Occurrences", 
+        "Enemy Group", 
+        list(breakdown_data['Enemy Group Distribution'].keys()), 
+        list(breakdown_data['Enemy Group Distribution'].values()), 
+        8, 6
+    )
+    section.add_figure(enemy_group_distribution, 400, 300)
+
+    report.add_section(section)
+
+def weapon_analytics(report, weapon_data):
+    section = ReportSection("Weapon Data", "Data relating to weapon choices and modifications")
+
+    weapon_chosen_distribution = create_horizontal_barchart(
+        "Weapon Chosen Distribution", 
+        "Frequency", 
+        "Weapon Name", 
+        list(weapon_data['Weapon Chosen Distribution'].keys()), 
+        list(weapon_data['Weapon Chosen Distribution'].values()), 
+        10, 6
+    )
+    section.add_figure(weapon_chosen_distribution, 500, 300)
+
+    section.add_statistic("Average Weapon Rerolls", weapon_data['Average Weapon Rerolls'])
+    section.add_statistic("Average Weapon Combines or Sells", weapon_data['Average Weapon Combines or Sells'])
+
+    report.add_section(section)
+    
+    
+    
 def export_pdf(report):
     c = canvas.Canvas("report.pdf", pagesize=letter)
     c.setTitle("Let Him Cook Data")
@@ -125,7 +232,13 @@ def export_pdf(report):
 
         for figure in section.figures:
             figure_obj, fig_width, fig_height = figure
-
+            # Check if there's enough space for the figure on the current page
+            if y_position - fig_height < 50:
+                c.showPage()
+                y_position = 750  # Reset y_position for new page
+            
+            # Draw the figure on the canvas
+            c.drawImage(ImageReader(figure_obj), 72, y_position - fig_height, fig_width, fig_height)
             draw_figure(c, figure_obj, 72, y_position - fig_height, fig_width, fig_height)  # Adjust width and height as needed
             y_position -= fig_height # Adjust space after figure
 
@@ -186,30 +299,26 @@ def create_boxplot(title, xlabel, data, w, h):
     buf.seek(0)
     return buf
 
-def create_barchart(title, x_label, y_label, x_data, y_data, w, h):
-    # Scale up the figure size for better visibility
+def create_barchart(title, x_label, y_label, x_data, y_data, w, h, annotate=True):
     plt.figure(figsize=(w, h))
-    # Create a bar chart
     bars = plt.bar(x_data, y_data, color='skyblue')
 
-    # Annotate the bars with their values
-    for bar in bars:
-        yval = bar.get_height()
-        plt.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.2f}', verticalalignment='bottom', fontsize=10, color='darkblue')
+    if annotate:
+        for bar in bars:
+            yval = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.2f}', verticalalignment='bottom', fontsize=10, color='darkblue')
 
     plt.title(title, fontsize=14)
     plt.xlabel(x_label, fontsize=12)
     plt.ylabel(y_label, fontsize=12)
-    plt.xticks(rotation=45, ha='right')  # Rotate category labels if there are many categories
+    plt.xticks(rotation=45, ha='right')
 
-    # Set the background color of the plot for better contrast
     plt.gca().set_facecolor('lightgrey')
-    plt.grid(True, linestyle='--', linewidth=0.5, color='black')  # Add grid lines for better readability
+    plt.grid(True, linestyle='--', linewidth=0.5, color='black')
 
     plt.tight_layout(pad=2.0)
-    plt.subplots_adjust(bottom=0.4)  # Adjust the bottom to make room for rotated labels
-    
-    # Save and clear current figure to avoid overwrites
+    plt.subplots_adjust(bottom=0.4)
+
     fig = plt.gcf()
     buf = BytesIO()
     fig.savefig(buf, format='png')
@@ -217,3 +326,33 @@ def create_barchart(title, x_label, y_label, x_data, y_data, w, h):
     buf.seek(0)
     return buf
 
+def create_horizontal_barchart(title, x_label, y_label, x_data, y_data, w, h, annotate=True):
+    plt.figure(figsize=(w, h))
+    bars = plt.barh(x_data, y_data, color='skyblue', height=0.5)  # Adjust bar height for spacing
+
+    if annotate:
+        for bar in bars:
+            yval = bar.get_width()
+            plt.text(yval, bar.get_y() + bar.get_height()/2, f'{yval:.2f}', horizontalalignment='left', fontsize=10, color='darkblue')
+
+
+    plt.title(title, fontsize=14)
+    plt.xlabel(x_label, fontsize=12)
+    plt.ylabel(y_label, fontsize=12)
+    plt.gca().set_facecolor('lightgrey')
+    plt.grid(True, linestyle='--', linewidth=0.5, color='black')
+
+    plt.tight_layout(pad=2.0)
+    plt.subplots_adjust(left=0.3)  # Adjust the left margin to make room for labels
+
+    fig = plt.gcf()
+    buf = BytesIO()
+    fig.savefig(buf, format='png')
+    plt.clf()
+    buf.seek(0)
+    return buf
+
+def extract_keys_values(data):
+    keys = list(data.keys())
+    values = list(data.values())
+    return keys, values    
